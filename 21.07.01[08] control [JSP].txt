@@ -1,0 +1,43 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import = "java.util.*, addr.*"%>
+<% request.setCharacterEncoding("UTF-8"); %>
+    <jsp:useBean id = "ad" class = "addr.AddDAO"/>
+    <jsp:useBean id = "addrbook" class = "addr.AddDTO"/>
+	<<jsp:setProperty property="*" name="addrbook"/>
+	
+<%
+	String action = request.getParameter("action");
+
+	if(action.equals("list")) {
+		ArrayList<AddDTO> datas = ad.selectAll();
+		request.setAttribute("datas", datas);
+		pageContext.forward("list.jsp");
+	} else if(action.equals("insert")){
+		int result = ad.insertDB(addrbook);
+		if(result > 0){
+			response.sendRedirect("control.jsp?action=list");
+		} else{
+			out.println("실패");
+		}
+	} else if(action.equals("edit")){
+		//int id = Integer.parseInt(request.getParameter("id"));
+		int id = addrbook.getId();
+		AddDTO data = ad.selectOne(id);
+		request.setAttribute("data", data);
+		pageContext.forward("edit.jsp");		
+	} else if(action.equals("update")){
+		int result = ad.updateDB(addrbook);
+		if(result > 0){
+			response.sendRedirect("control.jsp?action=list");
+		} else{
+			out.println("실패");
+		}
+	} else if(action.equals("delete")){
+		int result = ad.deleteDB(addrbook.getId());
+		if(result > 0){
+			response.sendRedirect("control.jsp?action=list");
+		} else{
+			out.println("실패");
+		}
+	}
+%>
