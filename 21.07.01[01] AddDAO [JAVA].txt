@@ -1,0 +1,164 @@
+package addr;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+public class AddDAO {
+	Connection conn = null;
+	Statement st = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	
+	String driver = "oracle.jdbc.OracleDriver";
+	String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	String userId = "hr";
+	String password = "hr";
+	
+	public void connect() {
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, userId, password);
+		} catch (Exception e) {	
+			e.printStackTrace();
+		}
+	}
+	
+	public void disconnect() {
+		try {
+			if(rs != null) rs.close();
+			if(st != null) st.close();
+			if(pst != null) pst.close();
+			if(conn != null) conn.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public int insertDB(AddDTO addrbook) {
+		connect();
+		String sql = "insert into addrbookT values (ad_seq.nextval,?,?,?,?,?,?)";
+		
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, addrbook.getName());
+			pst.setString(2, addrbook.getEmail());
+			pst.setString(3, addrbook.getBirth());
+			pst.setString(4, addrbook.getTel());
+			pst.setString(5, addrbook.getMemo());
+			pst.setString(6, addrbook.getCompany());
+			
+			int result = pst.executeUpdate();
+			return result;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			disconnect();
+		}
+	}
+	
+	public ArrayList<AddDTO> selectAll() {
+		connect();
+		ArrayList<AddDTO> datas = new ArrayList<AddDTO>(); 
+		
+		String sql = "select * from addrbookT order by id desc";
+		
+		try {
+			st = conn.createStatement();
+			rs = st.executeQuery(sql); //ResultSet에 결과를 담아놓음
+			while(rs.next()) {
+				AddDTO aa = new AddDTO();
+				
+				aa.setId(rs.getInt("id"));
+				aa.setName(rs.getString("name"));
+				aa.setEmail(rs.getString("email"));
+				aa.setBirth(rs.getString("birth"));
+				aa.setTel(rs.getString("tel"));
+				aa.setMemo(rs.getString("memo"));
+				aa.setCompany(rs.getString("company"));
+				
+				datas.add(aa);
+			
+			}
+		} catch(Exception e) {
+			
+		} finally {
+			disconnect();
+		}
+		return datas;
+	}
+	
+	public AddDTO selectOne(int id) {
+		connect();
+		AddDTO aa = new AddDTO();
+		
+		String sql = "select * from addrbookT where id=" + id;
+		
+		try {
+		st = conn.createStatement();
+		rs = st.executeQuery(sql);
+		
+		rs.next();
+		aa.setId(rs.getInt("id"));
+		aa.setName(rs.getString("name"));
+		aa.setEmail(rs.getString("email"));
+		aa.setBirth(rs.getString("birth"));
+		aa.setTel(rs.getString("tel"));
+		aa.setMemo(rs.getString("memo"));
+		aa.setCompany(rs.getString("company"));
+		
+		} catch(Exception e) {
+			e.printStackTrace();
+			
+		} finally {
+			disconnect();
+		}
+		return aa;
+	}
+	
+	public int updateDB(AddDTO addrbook) {
+		
+		connect();
+		int result = -1;
+		String sql = "update addrbookT set name=?, email=?, birth=?, "
+				+ "tel=?, memo=?, company=? where id=?";
+		
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, addrbook.getName());
+			pst.setString(2, addrbook.getEmail());
+			pst.setString(3, addrbook.getBirth());
+			pst.setString(4, addrbook.getTel());
+			pst.setString(5, addrbook.getMemo());
+			pst.setString(6, addrbook.getCompany());
+			pst.setInt(7, addrbook.getId());
+			
+			result = pst.executeUpdate();			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconnect();			
+		}
+		return result;
+	}
+	
+	public int deleteDB(int id) {
+		
+		connect();
+		String sql = "delete from addrbookT where id="+id;
+		int result = -1;
+		
+		try {
+			st = conn.createStatement();
+			result = st.executeUpdate(sql);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+		return result;
+	}
+}
