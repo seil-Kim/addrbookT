@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8"); %>
+    <jsp:useBean id = "ad" class = "addr.AddDAO"/>
+    <jsp:useBean id = "addrbook" class = "addr.AddDTO"/>
+    <<jsp:setProperty property = "*" name = "addrbook"/>
+    
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>save</title>
+</head>
+<body>
+<%
+	//쿼리 만들고 수행
+	//결과 처리
+	int result = ad.insertDB(addrbook);
+
+	if(result > 0){
+		//out.println("DB입력 성공");
+		response.sendRedirect("list.jsp");
+	} else {
+		out.println("DB입력 실패");
+	}	
+%>
+</body>
+</html>
