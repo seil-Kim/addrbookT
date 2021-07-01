@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert</title>
+</head>
+<body>
+<h1>주소:작성화면</h1>
+	<hr>
+	<a href="control.jsp?action=list">주소록 목록으로</a>
+	<form action="control.jsp" method="get">
+		<input type = "hidden" name = "action" value = "insert">
+	<table border="1">
+   		<tr>
+      		<th>이름</th><td><input type="text" name="name"></td>
+   		</tr>
+   		<tr>
+      		<th>Email</th><td><input type="text" name="email"></td>
+   		</tr>
+   		<tr>
+      		<th>생  일</th><td><input type="date" name="birth"></td>
+   		</tr>
+   		<tr>
+      		<th>전화번호</th><td><input type="text" name="tel"></td>
+   		</tr>
+   		<tr>
+      		<th>메  모</th><td><input type="text" name="memo"></td>
+   		</tr>
+   		<tr>
+      		<th>회  사</th><td><input type="text" name="company"></td>
+   		</tr>
+   		<tr>
+      		<th colspan="2"><button type="submit">저장</button>
+            	<button type="reset">취소</button>
+      		</th>
+   		</tr>
+	</table>
+	</form>
+</body>
+</html>
