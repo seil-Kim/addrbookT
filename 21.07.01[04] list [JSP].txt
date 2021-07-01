@@ -1,0 +1,56 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="java.util.*, addr.*" %>
+<% request.setCharacterEncoding("UTF-8"); %>
+	<jsp:useBean id="datas" scope="request" class="java.util.ArrayList"/>
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>list</title>
+<script>
+	function delCheck(){
+		confirm("정말로 삭제하시겠습니까?");
+		
+		if(result){
+			location.href="control.jsp?action=delete&id="+id;
+		}
+	}
+</script>
+</head>
+<body>
+<h1>주소록 목록</h1>
+<a href = "insert.html">주소록 등록</a>
+<hr>
+	<table border = "1">
+		<tr>
+			<th>순번</th>
+			<th>이름</th>
+			<th>이메일</th>
+			<th>생일</th>
+			<th>전화번호</th>
+			<th>메모</th>
+			<th>회사</th>
+			<th></th>
+		</tr>
+		<%
+			//for(int i=0; i<datas.size(); i++){
+       	 	for(AddDTO ads : (ArrayList<AddDTO>)datas) {
+				//addrbook = datas.get(i);
+		%>
+		<tr>
+			<td><%=ads.getId() %></td>
+			<td><a href="control.jsp?action=edit&id=<%=ads.getId() %>"><%=ads.getName() %></td>
+			<td><%=ads.getEmail() %></td>
+			<td><%=ads.getBirth() %></td>
+			<td><%=ads.getTel() %></td>
+			<td><%=ads.getMemo() %></td>
+			<td><%=ads.getCompany() %></td>
+			<td><a href="javascript:delCheck(<%=ads.getId() %>);">삭제</td>
+		</tr>
+		<%
+			}
+		%>
+	</table>
+</body>
+</html>
